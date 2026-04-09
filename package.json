@@ -17,5 +17,11 @@
   "bugs": {
     "url": "https://github.com/nalin70/automation-bots/issues"
   },
-  "homepage": "https://github.com/nalin70/automation-bots#readme"
+  "homepage": "https://github.com/nalin70/automation-bots#readme",
+  "dependencies": {
+    "axios": "^1.15.0",
+    "dotenv": "^17.4.1",
+    "node-cron": "^4.2.1",
+    "node-telegram-bot-api": "^0.67.0"
+  }
 }
