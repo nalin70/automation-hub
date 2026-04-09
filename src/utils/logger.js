@@ -1,5 +1,9 @@
-function log(message) {
-  console.log(`[${new Date().toISOString()}] ${message}`);
+function log(message, type = 'INFO') {
+  console.log(`[${type}] [${new Date().toISOString()}] ${message}`);
 }
 
-module.exports = { log };
+function error(message) {
+  log(message, 'ERROR');
+}
+
+module.exports = { log, error };
