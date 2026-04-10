@@ -28,10 +28,10 @@ async function runGithubCheck() {
 
     const state = readState();
 
-    if (state.lastCheckedDate === today) {
-      log('Already checked today');
-      return;
-    }
+    // if (state.lastCheckedDate === today) {
+    //   log('Already checked today');
+    //   return;
+    // }
 
     const result = await checkTodayActivity(username);
 
