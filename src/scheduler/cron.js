@@ -4,7 +4,7 @@ const { log } = require('../utils/logger');
 
 // Runs every day at 8 PM
 function startCronJobs() {
-  cron.schedule('0 20 * * *', async () => {
+  cron.schedule('* 20 * * *', async () => {
     log('Running GitHub activity check...');
     await runGithubCheck();
   });
