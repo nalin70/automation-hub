@@ -5,6 +5,7 @@ async function checkTodayActivity(username) {
 
   const res = await axios.get(url);
   const events = res.data;
+  console.log('GitHub events:', events);
 
   const today = new Date().toISOString().slice(0, 10);
 
@@ -18,6 +19,8 @@ async function checkTodayActivity(username) {
       commitCount += event.payload.commits.length;
     }
   });
+
+  console.log(`Commits today: ${commitCount}`);
 
   return {
     hasCommitToday: commitCount > 0,

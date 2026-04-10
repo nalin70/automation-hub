@@ -34,6 +34,7 @@ async function runGithubCheck() {
     // }
 
     const result = await checkTodayActivity(username);
+    console.log('GitHub activity result:', result);
 
     if (result.hasCommitToday) {
       state.streak += 1;
