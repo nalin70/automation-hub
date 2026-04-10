@@ -14,9 +14,10 @@ async function checkTodayActivity(username) {
   events.forEach(event => {
     if (
       event.type === 'PushEvent' &&
-      event.created_at.startsWith(today)
+      event.created_at.startsWith(today) &&
+      event.payload
     ) {
-      commitCount += event.payload.commits.length;
+      commitCount += 1;
     }
   });
 
@@ -24,7 +25,7 @@ async function checkTodayActivity(username) {
 
   return {
     hasCommitToday: commitCount > 0,
-    commitCount
+    commitCount: Number(commitCount)
   };
 }
 
