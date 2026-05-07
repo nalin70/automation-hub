@@ -1,15 +1,11 @@
-const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
 const { checkTodayActivity } = require('./github.service');
 const { runGithubCheck } = require('./github.scheduler');
+const { bot, pollingEnabled } = require('../../notifier/telegram.service');
 const { log, error } = require('../../utils/logger');
 const fs = require('fs');
 const path = require('path');
-
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {
-  polling: true,
-});
 
 const STATE_PATH = path.join(__dirname, '../../../data/state.json');
 
@@ -24,9 +20,11 @@ function readState() {
   return JSON.parse(fs.readFileSync(STATE_PATH, 'utf-8'));
 }
 
-bot.getMe()
-  .then(res => console.log('Bot connected:', res.username))
-  .catch(err => console.error('Connection failed:', err.message));
+if (pollingEnabled) {
+  bot.getMe()
+    .then(res => console.log('Bot connected:', res.username))
+    .catch(err => console.error('Connection failed:', err.message));
+}
 
   bot.on('message', (msg) => {
   console.log('MESSAGE RECEIVED:', msg.text);
@@ -92,6 +90,7 @@ bot.onText(/\/start/, (msg) => {
 Available commands:
 /check-now → Check activity now
 /status → View today's status
+/jobs → Check matching jobs now
 
 Stay consistent 🚀`
   );
