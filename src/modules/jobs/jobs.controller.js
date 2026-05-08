@@ -10,7 +10,7 @@ bot.onText(/\/jobs/, async (msg) => {
 
   try {
     await bot.sendMessage(chatId, '🔍 Fetching jobs...');
-    const jobs = await runJobCheck();
+    const jobs = await runJobCheck(chatId);
 
     if (jobs.length === 0) {
       await bot.sendMessage(chatId, 'No new matching jobs found.');
@@ -19,7 +19,9 @@ bot.onText(/\/jobs/, async (msg) => {
 
     await bot.sendMessage(chatId, `✅ Done! Sent ${jobs.length} job(s).`);
   } catch (err) {
-    console.error('Jobs command error:', err.message);
-    await bot.sendMessage(chatId, '❌ Failed to fetch jobs');
+    const message = err.message || String(err);
+
+    console.error('Jobs command error:', message);
+    await bot.sendMessage(chatId, `❌ Failed to fetch jobs\n\n${message}`);
   }
 });

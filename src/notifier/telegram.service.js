@@ -28,9 +28,9 @@ bot.on('polling_error', async (err) => {
   }
 });
 
-async function sendMessage(message) {
+async function sendMessage(message, chatId = process.env.TELEGRAM_CHAT_ID) {
   try {
-    await bot.sendMessage(process.env.TELEGRAM_CHAT_ID, message);
+    await bot.sendMessage(chatId, message);
   } catch (err) {
     console.error('Telegram Error:', err.message);
   }

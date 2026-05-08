@@ -1,7 +1,7 @@
 const { getNewFilteredJobs } = require('./jobs.service');
 const { sendMessage } = require('../../notifier/telegram.service');
 
-async function runJobCheck() {
+async function runJobCheck(chatId) {
   const jobs = await getNewFilteredJobs();
 
   for (const job of jobs) {
@@ -9,7 +9,8 @@ async function runJobCheck() {
     const location = job.location || 'Unknown location';
 
     await sendMessage(
-      `🚀 New Job!\n\n${job.title}\n${company}\n${location}\n${job.link}`
+      `🚀 New Job!\n\n${job.title}\n${company}\n${location}\n${job.link}`,
+      chatId
     );
   }
 
