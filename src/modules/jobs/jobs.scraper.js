@@ -47,7 +47,7 @@ function getErrorMessage(err) {
   return JSON.stringify(err);
 }
 
-async function fetchJobs() {
+async function fetchJobs(options = {}) {
   const apiKey = process.env.SERPAPI_API_KEY || process.env.SERP_API_KEY;
 
   if (!apiKey) {
@@ -59,8 +59,8 @@ async function fetchJobs() {
   try {
     response = await getJson({
       engine: 'google_jobs',
-      q: process.env.JOBS_QUERY || 'Node.js Developer',
-      location: process.env.JOBS_LOCATION || 'Remote',
+      q: options.query || process.env.JOBS_QUERY || 'Node.js Developer',
+      location: options.location || process.env.JOBS_LOCATION || 'Remote',
       google_domain: 'google.com',
       hl: process.env.JOBS_HL || 'en',
       gl: process.env.JOBS_GL || 'us',

@@ -1,8 +1,11 @@
-function filterJobs(jobs) {
+function filterJobs(jobs, options = {}) {
   if (!Array.isArray(jobs)) return [];
 
-  const keywords = (process.env.JOBS_KEYWORDS || '')
-    .split(',')
+  const keywordsInput = Array.isArray(options.keywords)
+    ? options.keywords
+    : (process.env.JOBS_KEYWORDS || '').split(',');
+
+  const keywords = keywordsInput
     .map(keyword => keyword.trim().toLowerCase())
     .filter(Boolean);
 

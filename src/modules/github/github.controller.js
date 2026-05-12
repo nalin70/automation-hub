@@ -91,6 +91,11 @@ Available commands:
 /check-now → Check activity now
 /status → View today's status
 /jobs → Check matching jobs now
+/schedule_jobs daily 08:00 → Schedule daily job recommendations
+/schedules → View your schedules
+/schedule_pause <id> → Pause a schedule
+/schedule_resume <id> → Resume a schedule
+/schedule_cancel <id> → Cancel a schedule
 
 Stay consistent 🚀`
   );

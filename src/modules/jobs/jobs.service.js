@@ -2,9 +2,9 @@ const { fetchJobs } = require('./jobs.scraper');
 const { filterJobs } = require('./jobs.filter');
 const { readJobs, saveJobs, isNewJob } = require('../../storage/jobs.store');
 
-async function getNewFilteredJobs() {
-  const jobs = await fetchJobs();
-  const filtered = filterJobs(jobs);
+async function getNewFilteredJobs(options = {}) {
+  const jobs = await fetchJobs(options);
+  const filtered = filterJobs(jobs, options);
 
   const existing = readJobs();
 

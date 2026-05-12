@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String     @id @default(cuid())
+  telegramUserId String     @unique
+  telegramChatId String
+  username       String?
+  firstName      String?
+  lastName       String?
+  timezone       String     @default("Asia/Kolkata")
+  schedules      Schedule[]
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+}
+
+model Schedule {
+  id          String        @id @default(cuid())
+  userId      String
+  type        String
+  title       String
+  frequency   String
+  timeOfDay   String
+  timezone    String        @default("Asia/Kolkata")
+  enabled     Boolean       @default(true)
+  configJson  String        @default("{}")
+  lastRunAt   DateTime?
+  nextRunAt   DateTime
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  runs        ScheduleRun[]
+
+  @@index([enabled, nextRunAt])
+  @@index([userId, type])
+}
+
+model ScheduleRun {
+  id         String    @id @default(cuid())
+  scheduleId String
+  status     String
+  message    String?
+  error      String?
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  schedule   Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+  @@index([scheduleId, startedAt])
+}
