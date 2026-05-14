@@ -5,6 +5,7 @@ function formatScheduleId(id) {
 function formatJobConfig(config = {}) {
   const parts = [];
 
+  if (config.summary) parts.push(config.summary);
   if (config.query) parts.push(`Query: ${config.query}`);
   if (config.location) parts.push(`Location: ${config.location}`);
   if (Array.isArray(config.keywords) && config.keywords.length > 0) {

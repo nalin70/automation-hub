@@ -48,34 +48,40 @@ bot.onText(/\/check-now/, async (msg) => {
   }
 });
 
-// =======================
-// COMMAND: /status
-// =======================
-bot.onText(/\/status/, async (msg) => {
+async function sendGithubStatus(chatId) {
+  const username = process.env.GITHUB_USERNAME;
+
+  const result = await checkTodayActivity(username);
+  const state = readState();
+
+  let message = `📊 GitHub Status for ${username}\n\n`;
+
+  if (result.hasCommitToday) {
+    message += `✅ Commits today: ${result.commitCount}\n`;
+  } else {
+    message += `❌ No commits today\n`;
+  }
+
+  message += `🔥 Current streak: ${state.streak}`;
+
+  await bot.sendMessage(chatId, message);
+}
+
+async function handleGithubStatusCommand(msg) {
   const chatId = msg.chat.id;
 
   try {
-    const username = process.env.GITHUB_USERNAME;
-
-    const result = await checkTodayActivity(username);
-    const state = readState();
-
-    let message = `📊 GitHub Status for ${username}\n\n`;
-
-    if (result.hasCommitToday) {
-      message += `✅ Commits today: ${result.commitCount}\n`;
-    } else {
-      message += `❌ No commits today\n`;
-    }
-
-    message += `🔥 Current streak: ${state.streak}`;
-
-    await bot.sendMessage(chatId, message);
+    await sendGithubStatus(chatId);
   } catch (err) {
     error(err.message);
     bot.sendMessage(chatId, '❌ Failed to fetch status');
   }
-});
+}
+
+// =======================
+// COMMAND: /status
+// =======================
+bot.onText(/\/status/, handleGithubStatusCommand);
 
 // =======================
 // COMMAND: /start
@@ -100,3 +106,5 @@ Available commands:
 Stay consistent 🚀`
   );
 });
+
+module.exports = { sendGithubStatus, handleGithubStatusCommand };

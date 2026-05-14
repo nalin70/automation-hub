@@ -1,8 +1,21 @@
-const { getNewFilteredJobs } = require('./jobs.service');
+const { getNewFilteredJobs, markJobsSent } = require('./jobs.service');
 const { sendMessage } = require('../../notifier/telegram.service');
+const { findOrCreateTelegramUserByChatId } = require('../users/users.service');
 
-async function runJobCheck(chatId, options = {}) {
-  const jobs = await getNewFilteredJobs(options);
+async function resolveUserId(chatId, options) {
+  if (options.userId) return options.userId;
+
+  if (!chatId) {
+    throw new Error('A chat is required to fetch personalized jobs.');
+  }
+
+  const user = await findOrCreateTelegramUserByChatId(chatId);
+  return user.id;
+}
+
+async function runJobCheck(chatId = process.env.TELEGRAM_CHAT_ID, options = {}) {
+  const userId = await resolveUserId(chatId, options);
+  const jobs = await getNewFilteredJobs(userId, options);
 
   for (const job of jobs) {
     const company = job.company || 'Unknown company';
@@ -13,6 +26,8 @@ async function runJobCheck(chatId, options = {}) {
       chatId
     );
   }
+
+  await markJobsSent(userId, jobs, options);
 
   return jobs;
 }

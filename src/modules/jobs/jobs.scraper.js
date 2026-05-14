@@ -22,6 +22,11 @@ function normalizeJob(job) {
     company: job.company_name || job.company || 'Unknown company',
     location: job.location || 'Unknown location',
     link,
+    source: job.via || null,
+    description: job.description || null,
+    postedAtText: job.detected_extensions && job.detected_extensions.posted_at
+      ? job.detected_extensions.posted_at
+      : null,
   };
 }
 

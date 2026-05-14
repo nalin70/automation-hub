@@ -16,6 +16,8 @@ model User {
   lastName       String?
   timezone       String     @default("Asia/Kolkata")
   schedules      Schedule[]
+  jobPreference  JobPreference?
+  sentJobs       SentJob[]
   createdAt      DateTime   @default(now())
   updatedAt      DateTime   @updatedAt
 }
@@ -36,6 +38,7 @@ model Schedule {
   updatedAt   DateTime      @updatedAt
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
   runs        ScheduleRun[]
+  sentJobs    SentJob[]
 
   @@index([enabled, nextRunAt])
   @@index([userId, type])
@@ -52,4 +55,51 @@ model ScheduleRun {
   schedule   Schedule  @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
 
   @@index([scheduleId, startedAt])
+}
+
+model Job {
+  id           String    @id @default(cuid())
+  externalId   String?
+  title        String
+  company      String
+  location     String
+  link         String    @unique
+  source       String?
+  description  String?
+  postedAtText String?
+  sentJobs     SentJob[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([externalId])
+}
+
+model SentJob {
+  id         String    @id @default(cuid())
+  userId     String
+  jobId      String
+  scheduleId String?
+  sentAt     DateTime  @default(now())
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  job        Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  schedule   Schedule? @relation(fields: [scheduleId], references: [id], onDelete: SetNull)
+
+  @@unique([userId, jobId])
+  @@index([userId, sentAt])
+  @@index([scheduleId])
+}
+
+model JobPreference {
+  id           String   @id @default(cuid())
+  userId       String   @unique
+  domainId     String
+  cityId       String
+  experienceId String
+  query        String
+  location     String
+  keywordsJson String   @default("[]")
+  summary      String?
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

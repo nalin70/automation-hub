@@ -29,6 +29,7 @@ const { log } = require('./utils/logger');
 // load bot controller
 require('./modules/github/github.controller');
 require('./modules/jobs/jobs.controller');
+require('./modules/greetings/greetings.controller');
 require('./modules/schedules/schedules.controller');
 
 const PORT = process.env.PORT || 3000;

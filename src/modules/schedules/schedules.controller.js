@@ -1,6 +1,7 @@
 require('dotenv').config();
 
 const { bot } = require('../../notifier/telegram.service');
+const { getJobPreference } = require('../jobs/jobs.service');
 const { findOrCreateTelegramUser } = require('../users/users.service');
 const {
   cancelScheduleForUser,
@@ -17,12 +18,32 @@ const {
   formatScheduleList,
 } = require('./schedules.formatter');
 
+async function applySavedJobsConfig(userId, input) {
+  if (input.type !== 'jobs') return input;
+
+  const preference = await getJobPreference(userId);
+  if (!preference) return input;
+
+  return {
+    ...input,
+    config: {
+      domainId: preference.domainId,
+      cityId: preference.cityId,
+      experienceId: preference.experienceId,
+      query: preference.query,
+      location: preference.location,
+      keywords: preference.keywords,
+      summary: preference.summary,
+    },
+  };
+}
+
 bot.onText(/\/schedule_jobs(?:\s+.+)?/, async (msg) => {
   const chatId = msg.chat.id;
 
   try {
     const user = await findOrCreateTelegramUser(msg);
-    const input = parseScheduleJobsCommand(msg.text);
+    const input = await applySavedJobsConfig(user.id, parseScheduleJobsCommand(msg.text));
     const schedule = await createSchedule(user.id, input);
 
     await bot.sendMessage(chatId, formatScheduleCreated(schedule));
@@ -75,7 +96,7 @@ bot.on('message', async (msg) => {
     if (!input) return;
 
     const user = await findOrCreateTelegramUser(msg);
-    const schedule = await createSchedule(user.id, input);
+    const schedule = await createSchedule(user.id, await applySavedJobsConfig(user.id, input));
 
     await bot.sendMessage(msg.chat.id, formatScheduleCreated(schedule));
   } catch (err) {

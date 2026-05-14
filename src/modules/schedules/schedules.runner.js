@@ -32,7 +32,11 @@ async function runSchedule(schedule) {
   try {
     if (schedule.type === 'jobs') {
       log(`Running schedule ${schedule.id} for chat ${chatId}`);
-      const jobs = await runJobCheck(chatId, schedule.config);
+      const jobs = await runJobCheck(chatId, {
+        ...schedule.config,
+        scheduleId: schedule.id,
+        userId: schedule.user.id,
+      });
 
       if (jobs.length === 0) {
         await sendMessage('No new matching jobs found for your scheduled reminder.', chatId);

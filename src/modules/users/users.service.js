@@ -32,4 +32,21 @@ async function findOrCreateTelegramUser(msg) {
   });
 }
 
-module.exports = { findOrCreateTelegramUser };
+async function findOrCreateTelegramUserByChatId(chatId) {
+  const id = String(chatId);
+
+  return prisma.user.upsert({
+    where: {
+      telegramUserId: id,
+    },
+    create: {
+      telegramUserId: id,
+      telegramChatId: id,
+    },
+    update: {
+      telegramChatId: id,
+    },
+  });
+}
+
+module.exports = { findOrCreateTelegramUser, findOrCreateTelegramUserByChatId };
