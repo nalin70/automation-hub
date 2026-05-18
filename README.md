@@ -36,7 +36,7 @@ Shows quick choices for domain, city, and experience, saves those preferences fo
 hello
 hi
 ```
-Shows quick action buttons to find jobs or view GitHub status. The jobs action asks for domain, city, and experience before fetching results.
+Shows all available options divided into General, GitHub Activity, Jobs, and Schedules categories, plus quick action buttons to find jobs or view GitHub status. The jobs action asks for domain, city, and experience before fetching results.
 
 ```text
 /schedule_jobs daily 08:00

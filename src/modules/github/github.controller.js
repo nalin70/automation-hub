@@ -4,6 +4,7 @@ const { checkTodayActivity } = require('./github.service');
 const { runGithubCheck } = require('./github.scheduler');
 const { bot, pollingEnabled } = require('../../notifier/telegram.service');
 const { log, error } = require('../../utils/logger');
+const { buildOptionsKeyboard, formatOptionsMenu } = require('../greetings/greetings.menu');
 const fs = require('fs');
 const path = require('path');
 
@@ -89,22 +90,9 @@ bot.onText(/\/status/, handleGithubStatusCommand);
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
-  bot.sendMessage(
-    chatId,
-    `👋 Welcome to GitHub Activity Assistant!
-
-Available commands:
-/check-now → Check activity now
-/status → View today's status
-/jobs → Check matching jobs now
-/schedule_jobs daily 08:00 → Schedule daily job recommendations
-/schedules → View your schedules
-/schedule_pause <id> → Pause a schedule
-/schedule_resume <id> → Resume a schedule
-/schedule_cancel <id> → Cancel a schedule
-
-Stay consistent 🚀`
-  );
+  bot.sendMessage(chatId, formatOptionsMenu(), {
+    reply_markup: buildOptionsKeyboard(),
+  });
 });
 
 module.exports = { sendGithubStatus, handleGithubStatusCommand };

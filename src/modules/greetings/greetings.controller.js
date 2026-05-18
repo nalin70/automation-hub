@@ -4,9 +4,12 @@ const { bot } = require('../../notifier/telegram.service');
 const { sendGithubStatus } = require('../github/github.controller');
 const { startJobSearch } = require('../jobs/jobs.controller');
 const { findOrCreateTelegramUser } = require('../users/users.service');
-
-const CALLBACK_JOBS = 'greeting:jobs';
-const CALLBACK_GITHUB_STATUS = 'greeting:github_status';
+const {
+  CALLBACK_GITHUB_STATUS,
+  CALLBACK_JOBS,
+  buildOptionsKeyboard,
+  formatOptionsMenu,
+} = require('./greetings.menu');
 
 function isGreeting(text) {
   return /^\s*(hi|hello)\b/i.test(text || '');
@@ -17,15 +20,8 @@ bot.on('message', async (msg) => {
 
   if (!isGreeting(text) || text.startsWith('/')) return;
 
-  await bot.sendMessage(msg.chat.id, 'Hi! What would you like to do?', {
-    reply_markup: {
-      inline_keyboard: [
-        [
-          { text: 'Find jobs', callback_data: CALLBACK_JOBS },
-          { text: 'GitHub status', callback_data: CALLBACK_GITHUB_STATUS },
-        ],
-      ],
-    },
+  await bot.sendMessage(msg.chat.id, formatOptionsMenu(), {
+    reply_markup: buildOptionsKeyboard(),
   });
 });
 
