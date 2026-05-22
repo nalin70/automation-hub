@@ -8,13 +8,48 @@ const JOB_DOMAINS = [
 ];
 
 const JOB_CITIES = [
-  { id: 'remote', label: 'Remote', location: 'Remote' },
-  { id: 'bangalore', label: 'Bengaluru', location: 'Bengaluru, Karnataka, India' },
-  { id: 'hyderabad', label: 'Hyderabad', location: 'Hyderabad, Telangana, India' },
-  { id: 'pune', label: 'Pune', location: 'Pune, Maharashtra, India' },
-  { id: 'chennai', label: 'Chennai', location: 'Chennai, Tamil Nadu, India' },
-  { id: 'mumbai', label: 'Mumbai', location: 'Mumbai, Maharashtra, India' },
-  { id: 'delhi', label: 'Delhi NCR', location: 'Delhi NCR, India' },
+  {
+    id: 'remote',
+    label: 'Remote',
+    location: 'Remote',
+    searchLocations: ['India', 'Remote'],
+  },
+  {
+    id: 'bangalore',
+    label: 'Bengaluru',
+    location: 'Bengaluru, Karnataka, India',
+    searchLocations: ['Bengaluru, Karnataka, India', 'Bangalore, Karnataka, India', 'India'],
+  },
+  {
+    id: 'hyderabad',
+    label: 'Hyderabad',
+    location: 'Hyderabad, Telangana, India',
+    searchLocations: ['Hyderabad, Telangana, India', 'Secunderabad, Telangana, India', 'India'],
+  },
+  {
+    id: 'pune',
+    label: 'Pune',
+    location: 'Pune, Maharashtra, India',
+    searchLocations: ['Pune, Maharashtra, India', 'Pimpri-Chinchwad, Maharashtra, India', 'India'],
+  },
+  {
+    id: 'chennai',
+    label: 'Chennai',
+    location: 'Chennai, Tamil Nadu, India',
+    searchLocations: ['Chennai, Tamil Nadu, India', 'India'],
+  },
+  {
+    id: 'mumbai',
+    label: 'Mumbai',
+    location: 'Mumbai, Maharashtra, India',
+    searchLocations: ['Mumbai, Maharashtra, India', 'Navi Mumbai, Maharashtra, India', 'Thane, Maharashtra, India', 'India'],
+  },
+  {
+    id: 'delhi',
+    label: 'Delhi NCR',
+    location: 'Delhi NCR, India',
+    searchLocations: ['Delhi NCR, India', 'Gurugram, Haryana, India', 'Noida, Uttar Pradesh, India', 'New Delhi, Delhi, India', 'India'],
+  },
 ];
 
 const JOB_EXPERIENCE_LEVELS = [

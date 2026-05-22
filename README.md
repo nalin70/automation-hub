@@ -90,6 +90,19 @@ OPENAI_API_KEY=your_api_key_here
 
 `LLM_BASE_URL` is optional and can point to any OpenAI-compatible chat completions endpoint.
 
+### Job Fetching Configuration
+
+```env
+SERPAPI_API_KEY=your_serpapi_key_here
+JOBS_GOOGLE_DOMAIN=google.co.in
+JOBS_GL=in
+JOBS_HL=en
+JOBS_MIN_RESULTS=8
+JOBS_MAX_SEARCHES=5
+```
+
+Job searches use Google Jobs through SerpApi. When a city search returns too few results, the bot automatically retries nearby or broader locations such as Bangalore for Bengaluru, Gurugram/Noida for Delhi NCR, or India as a fallback. `JOBS_MIN_RESULTS` controls when the retry loop can stop, and `JOBS_MAX_SEARCHES` caps the number of SerpApi calls per job check.
+
 ### Local Development Commands
 
 ```powershell
