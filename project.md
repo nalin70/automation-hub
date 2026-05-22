@@ -45,3 +45,38 @@ cron schedule format
 |     |     |     |     |
 |     |     |     |     |
 *     *     *     *     *
+
+
+
+jobs 
+
+automation-hub/
+│
+├── src/
+│
+│   ├── modules/
+│   │
+│   │   ├── github/
+│   │   │   └── ...
+│   │
+│   │   └── jobs/
+│   │       ├── jobs.controller.js
+│   │       ├── jobs.service.js
+│   │       ├── jobs.scheduler.js
+│   │       ├── jobs.filter.js
+│   │       ├── jobs.scraper.js
+│   │       └── jobs.constants.js
+│   │
+│   ├── notifier/
+│   │   └── telegram.service.js
+│   │
+│   ├── storage/
+│   │   └── jobs.store.js
+│   │
+│   ├── scheduler/
+│   │   └── cron.js
+│   │
+│   └── index.js
+│
+├── data/
+│   └── jobs.json

@@ -1,15 +1,12 @@
-const TelegramBot = require('node-telegram-bot-api');
 require('dotenv').config();
 
 const { checkTodayActivity } = require('./github.service');
 const { runGithubCheck } = require('./github.scheduler');
+const { bot, pollingEnabled } = require('../../notifier/telegram.service');
 const { log, error } = require('../../utils/logger');
+const { buildOptionsKeyboard, formatOptionsMenu } = require('../greetings/greetings.menu');
 const fs = require('fs');
 const path = require('path');
-
-const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN, {
-  polling: true,
-});
 
 const STATE_PATH = path.join(__dirname, '../../../data/state.json');
 
@@ -24,9 +21,11 @@ function readState() {
   return JSON.parse(fs.readFileSync(STATE_PATH, 'utf-8'));
 }
 
-bot.getMe()
-  .then(res => console.log('Bot connected:', res.username))
-  .catch(err => console.error('Connection failed:', err.message));
+if (pollingEnabled) {
+  bot.getMe()
+    .then(res => console.log('Bot connected:', res.username))
+    .catch(err => console.error('Connection failed:', err.message));
+}
 
   bot.on('message', (msg) => {
   console.log('MESSAGE RECEIVED:', msg.text);
@@ -50,34 +49,40 @@ bot.onText(/\/check-now/, async (msg) => {
   }
 });
 
-// =======================
-// COMMAND: /status
-// =======================
-bot.onText(/\/status/, async (msg) => {
+async function sendGithubStatus(chatId) {
+  const username = process.env.GITHUB_USERNAME;
+
+  const result = await checkTodayActivity(username);
+  const state = readState();
+
+  let message = `📊 GitHub Status for ${username}\n\n`;
+
+  if (result.hasCommitToday) {
+    message += `✅ Commits today: ${result.commitCount}\n`;
+  } else {
+    message += `❌ No commits today\n`;
+  }
+
+  message += `🔥 Current streak: ${state.streak}`;
+
+  await bot.sendMessage(chatId, message);
+}
+
+async function handleGithubStatusCommand(msg) {
   const chatId = msg.chat.id;
 
   try {
-    const username = process.env.GITHUB_USERNAME;
-
-    const result = await checkTodayActivity(username);
-    const state = readState();
-
-    let message = `📊 GitHub Status for ${username}\n\n`;
-
-    if (result.hasCommitToday) {
-      message += `✅ Commits today: ${result.commitCount}\n`;
-    } else {
-      message += `❌ No commits today\n`;
-    }
-
-    message += `🔥 Current streak: ${state.streak}`;
-
-    await bot.sendMessage(chatId, message);
+    await sendGithubStatus(chatId);
   } catch (err) {
     error(err.message);
     bot.sendMessage(chatId, '❌ Failed to fetch status');
   }
-});
+}
+
+// =======================
+// COMMAND: /status
+// =======================
+bot.onText(/\/status/, handleGithubStatusCommand);
 
 // =======================
 // COMMAND: /start
@@ -85,14 +90,9 @@ bot.onText(/\/status/, async (msg) => {
 bot.onText(/\/start/, (msg) => {
   const chatId = msg.chat.id;
 
-  bot.sendMessage(
-    chatId,
-    `👋 Welcome to GitHub Activity Assistant!
-
-Available commands:
-/check-now → Check activity now
-/status → View today's status
-
-Stay consistent 🚀`
-  );
+  bot.sendMessage(chatId, formatOptionsMenu(), {
+    reply_markup: buildOptionsKeyboard(),
+  });
 });
+
+module.exports = { sendGithubStatus, handleGithubStatusCommand };

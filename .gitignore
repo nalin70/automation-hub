@@ -2,3 +2,5 @@ node_modules/
 .env
 data/state.json
 package-lock.json
+prisma/dev.db
+prisma/dev.db-journal
