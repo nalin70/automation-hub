@@ -10,7 +10,6 @@ const {
   setScheduleEnabledForUser,
 } = require('./schedules.service');
 const {
-  parseNaturalJobsReminder,
   parseScheduleJobsCommand,
 } = require('./schedules.parser');
 const {
@@ -83,24 +82,6 @@ bot.onText(/\/schedule_cancel\s+(\S+)/, async (msg, match) => {
     await bot.sendMessage(chatId, 'Schedule cancelled.');
   } catch (err) {
     await bot.sendMessage(chatId, `Could not cancel schedule.\n\n${err.message || String(err)}`);
-  }
-});
-
-bot.on('message', async (msg) => {
-  const text = msg.text || '';
-
-  if (!text || text.startsWith('/')) return;
-
-  try {
-    const input = parseNaturalJobsReminder(text);
-    if (!input) return;
-
-    const user = await findOrCreateTelegramUser(msg);
-    const schedule = await createSchedule(user.id, await applySavedJobsConfig(user.id, input));
-
-    await bot.sendMessage(msg.chat.id, formatScheduleCreated(schedule));
-  } catch (err) {
-    await bot.sendMessage(msg.chat.id, `Could not create reminder.\n\n${err.message || String(err)}`);
   }
 });
 

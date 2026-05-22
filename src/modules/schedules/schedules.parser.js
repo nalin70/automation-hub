@@ -83,6 +83,7 @@ function getDefaultJobsConfig() {
 
 module.exports = {
   DEFAULT_TIMEZONE,
+  getDefaultJobsConfig,
   parseNaturalJobsReminder,
   parseScheduleJobsCommand,
   parseTimeTo24Hour,

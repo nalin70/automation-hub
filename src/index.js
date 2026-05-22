@@ -31,6 +31,7 @@ require('./modules/github/github.controller');
 require('./modules/jobs/jobs.controller');
 require('./modules/greetings/greetings.controller');
 require('./modules/schedules/schedules.controller');
+require('./modules/assistant/assistant.controller');
 
 const PORT = process.env.PORT || 3000;
 

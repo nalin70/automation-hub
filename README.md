@@ -7,6 +7,7 @@
 - Multi-user schedule reminders
 - Daily job recommendation schedules
 - Per-user job history and saved job search preferences
+- LLM-assisted natural-language Telegram routing for jobs, schedules, and GitHub status
 
 ## Commands
 
@@ -64,11 +65,30 @@ Resumes a paused schedule.
 ```
 Deletes a schedule.
 
-You can also create a jobs reminder with natural text:
+You can also use natural-language messages:
 
 ```text
 remind me daily at 8 am for jobs
+find React fresher jobs in Pune
+show my GitHub status
+show my reminders
+check GitHub now
 ```
+
+When LLM configuration is not present, the bot falls back to a small deterministic parser for common messages. With an LLM key configured, the assistant can understand more flexible wording and maps messages to the existing bot actions.
+
+### LLM Configuration
+
+```env
+LLM_ENABLED=true
+LLM_BASE_URL=https://api.openai.com/v1
+LLM_MODEL=gpt-4o-mini
+LLM_MIN_CONFIDENCE=0.65
+LLM_TIMEOUT_MS=15000
+OPENAI_API_KEY=your_api_key_here
+```
+
+`LLM_BASE_URL` is optional and can point to any OpenAI-compatible chat completions endpoint.
 
 ### Local Development Commands
 
@@ -86,6 +106,11 @@ Starts the app with nodemon.
 npm start
 ```
 Starts the app with Node.
+
+```powershell
+npm test
+```
+Runs assistant intent fixture checks.
 
 ```powershell
 $env:TELEGRAM_POLLING='false'; npm run dev

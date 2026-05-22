@@ -21,7 +21,7 @@ function writeState(state) {
   fs.writeFileSync(STATE_PATH, JSON.stringify(state, null, 2));
 }
 
-async function runGithubCheck() {
+async function runGithubCheck(chatId) {
   try {
     const username = process.env.GITHUB_USERNAME;
     const today = getTodayDate();
@@ -40,13 +40,15 @@ async function runGithubCheck() {
       state.streak += 1;
 
       await sendMessage(
-        `✅ ${username} committed ${result.commitCount} time(s) today!\n🔥 Streak: ${state.streak}`
+        `✅ ${username} committed ${result.commitCount} time(s) today!\n🔥 Streak: ${state.streak}`,
+        chatId
       );
     } else {
       state.streak = 0;
 
       await sendMessage(
-        `⚠️ No commits today for ${username}!\nPush something 🚀`
+        `⚠️ No commits today for ${username}!\nPush something 🚀`,
+        chatId
       );
     }
 
