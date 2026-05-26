@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node scripts/test-assistant-intents.js",
+    "test": "node scripts/test-assistant-intents.js && node scripts/test-job-formatter.js",
     "start": "node src/index.js",
     "dev": "nodemon src/index.js",
     "prisma:generate": "prisma generate",

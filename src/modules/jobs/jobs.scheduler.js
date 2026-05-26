@@ -1,4 +1,5 @@
 const { getNewFilteredJobs, markJobsSent } = require('./jobs.service');
+const { formatJobMessageChunks } = require('./jobs.formatter');
 const { sendMessage } = require('../../notifier/telegram.service');
 const { findOrCreateTelegramUserByChatId } = require('../users/users.service');
 
@@ -16,15 +17,10 @@ async function resolveUserId(chatId, options) {
 async function runJobCheck(chatId = process.env.TELEGRAM_CHAT_ID, options = {}) {
   const userId = await resolveUserId(chatId, options);
   const jobs = await getNewFilteredJobs(userId, options);
+  const messages = formatJobMessageChunks(jobs);
 
-  for (const job of jobs) {
-    const company = job.company || 'Unknown company';
-    const location = job.location || 'Unknown location';
-
-    await sendMessage(
-      `🚀 New Job!\n\n${job.title}\n${company}\n${location}\n${job.link}`,
-      chatId
-    );
+  for (const message of messages) {
+    await sendMessage(message, chatId);
   }
 
   await markJobsSent(userId, jobs, options);
